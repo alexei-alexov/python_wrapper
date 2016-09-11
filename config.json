@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "root",
+    "passwrd": "",
+    "db": "test",
+    "debug": true
+}
