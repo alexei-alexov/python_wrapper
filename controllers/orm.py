@@ -56,6 +56,8 @@ class Wrapper(object):
     def update(self, table, set, where=None):
         """
         This method provide update SQL command
+        
+        Return True if everything ok
         """
         sql = "UPDATE " + table +\
                 " SET " + set +\
@@ -125,6 +127,16 @@ class Wrapper(object):
             print exept
             self.connect.rollback()
             return False
+
+
+class WrongData(Exception):
+    """
+    This exception raise when trying to modify data that is not in table
+    """
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
 
 
 if __name__ == "__main__":

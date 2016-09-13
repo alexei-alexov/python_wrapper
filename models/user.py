@@ -22,8 +22,8 @@ class User(object):
         self.role_id = role_id
         self.id = id
 
-    def get_tuple(self):
-        return (self.fullname, self.email, self.password, self.avatar, self.is_active, self.role_id)
+    def get_tuple(self, need_id=False):
+        return (self.id,) if need_id else () + (self.fullname, self.email, self.password, self.avatar, self.is_active, self.role_id)
 
 class UserController(object):
     """
@@ -66,6 +66,29 @@ class UserController(object):
 
     def update_user(self, wrapper, user):
         """
-        This method update selected user, user should have id field!
+        This method update selected user, user should be in database
         """
-    
+        if user.id == -1:
+            raise WrongData("User is not in a table")
+
+        wrapper.update(User.__table_name, user.get_fields(), "id = " + user.id)
+
+
+    def delete_user(self, wrapper, user):
+        """
+        This method delete choosen user, user should be in database
+        """
+        if user.id == -1:
+            raise WrongData("User is not in a table")
+
+        wrapper.delete(User.__table_name, "id = " + user.id)
+
+
+    def get_user(self, wrapper, id):
+        """
+        This method return user with specific id
+        """
+        if id <= 0:
+            raise WrongData("Id cannot be negative")
+
+        wrapper.select(User.__table_name, self.get_fields(), "id = " + id)
